@@ -23,21 +23,21 @@ brians_pets = Merchant.create!(name: 'Brians Pet Shop',
 megans_mythicals.items.create!(name: 'Ogre',
         description: "I'm an Ogre!",
         price: 20,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw',
+        image: 'https://t4.rbxcdn.com/284aae33bbdfeef1fa35d8fc111a8d98',
         active: true,
         inventory: 25)
 
 megans_mythicals.items.create!(name: 'Giant',
         description: "I'm a Giant!",
         price: 50,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw',
+        image: 'https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2012/12/7/1354883453249/Gollum-in-the-film-of-The-008.jpg?width=300&quality=85&auto=format&fit=max&s=860f7f0afb0f80f25eca8a2088316b38',
         active: true,
         inventory: 50)
 
 megans_mythicals.items.create!(name: 'Medusa',
         description: "I'm Snakey!",
         price: 50,
-        image: 'https://www.ancient-origins.net/sites/default/files/field/image/Medusa-Modern.jpg',
+        image: 'https://cdna.artstation.com/p/assets/images/images/015/332/824/large/greg-laux-medusawip.jpg?1547958542',
         active: true,
         inventory: 75)
 
