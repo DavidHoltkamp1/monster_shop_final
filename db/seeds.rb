@@ -44,7 +44,7 @@ megans_mythicals.items.create!(name: 'Medusa',
 brians_pets.items.create!(name: 'Hippo',
         description: "I'm a Hippo!",
         price: 50,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw',
+        image: 'https://www.fox13memphis.com/resizer/Hk7hvYUpoiQN1TTcbcS8hZolfjw=/1200x600/arc-anglerfish-arc2-prod-cmg.s3.amazonaws.com/public/INDQWWJBMYZQVWRLD4KPWNAATQ.jpg',
         active: true,
         inventory: 51)
 
