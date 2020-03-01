@@ -1,0 +1,20 @@
+<h1>Update Discount</h1>
+
+<%= form_tag "/merchant/discounts/#{@discount.id}", method: :patch do %>
+  <%= label_tag :name %>
+  <%= text_field_tag :name %>
+
+  <%= label_tag :description %>
+  <%= text_field_tag :description %>
+
+  <%= label_tag :percentage_off %>
+  <%= text_field_tag :percentage_off %>
+
+  <%= label_tag :minimum %>
+  <%= text_field_tag :minimum %>
+
+  <%= label_tag :maximum %>
+  <%= text_field_tag :maximum %>
+
+  <%= submit_tag 'Update Discount' %>
+<% end %>

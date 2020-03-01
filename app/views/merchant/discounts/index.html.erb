@@ -1,9 +1,13 @@
 <h1>All Discounts</h1>
 
+<%= link_to 'Create New Discount', '/merchant/discounts/new' %>
 <% @discounts.each do |discount| %>
-  <p>Discount: <%= discount.name %></p>
-  <p>Description: <%= discount.description %></p>
-  <p>Percentage Off: <%= discount.percentage_off %></p>
-  <p>Minimum Amount of Items for Discount: <%= discount.minimum %></p>
-  <p>Maximum Amount of Items for Discount: <%= discount.maximum %></p>
+  <section id="discounts-<%=discount.id%>">
+    <p>Discount: <%= discount.name %></p>
+    <p>Description: <%= discount.description %></p>
+    <p>Percentage Off: <%= discount.percentage_off %></p>
+    <p>Minimum Amount of Items for Discount: <%= discount.minimum %></p>
+    <p>Maximum Amount of Items for Discount: <%= discount.maximum %></p>
+    <%= link_to 'Update Discount', "/merchant/discounts/edit/#{discount.id}" %>
+  </section>
 <% end %>
