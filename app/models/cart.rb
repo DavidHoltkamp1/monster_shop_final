@@ -42,7 +42,5 @@ class Cart
 
   def limit_reached?(item_id)
     count_of(item_id) == Item.find(item_id).inventory
-  end
-
-  
+  end  
 end

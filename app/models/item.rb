@@ -57,4 +57,4 @@ class Item < ApplicationRecord
     # merchant.discounts.any do |discount|
     #   item_quantity >= discount.minimum
     # end
-  end
+end
