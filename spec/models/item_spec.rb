@@ -73,5 +73,9 @@ RSpec.describe Item do
       expect(Item.by_popularity(3, "ASC")).to eq([@giant, @gator, @ogre])
       expect(Item.by_popularity(3, "DESC")).to eq([@hippo, @nessie, @ogre])
     end
+
+    # it '.merchant_discounts' do
+    # require "pry"; binding.pry
+    # end
   end
 end
