@@ -254,12 +254,135 @@ RSpec.describe 'Cart Show Page' do
 
         expect(page).to_not have_content(@discount_3.description)
         expect(page).to_not have_content(@discount_4.description)
+      end
+
+      it "I can see my discounted total after a discount is applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        2.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        expect(page).not_to have_content("Discounted Subtotal")
+
+        3.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $250.00")
+          expect(page).to have_content("Discounted Subtotal: $225.00")
+        end
+
+      end
+
+      it "I can see separate discounted totals when multiple discounts from different merchants are applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        2.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        expect(page).not_to have_content("Discounted Subtotal")
+
+        6.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $400.00")
+          expect(page).to have_content("Discounted Subtotal: $360.00")
+          expect(page).to have_content(@discount_3.description)
+        end
 
 
-        # expect(page).to have_content("Subtotal: $50.00")
-        # expect(page).to have_content("Subtotal: $250.00")
-        # expect(page).to have_content("Discounted Total: $25.00")
-        # expect(page).to have_content("Grand Total: $225.00")
+        10.times do
+          visit item_path(@ogre)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@ogre.id}" do
+          expect(page).to have_content("Subtotal: $200.00")
+          expect(page).to have_content("Discounted Subtotal: $160.00")
+          expect(page).to have_content(@discount_2.description)
+        end
+      end
+
+      it "I can see the grand total changed when discounts are applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        2.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).not_to have_content("Discounted Subtotal")
+          expect(page).to have_content("Subtotal: $100.00")
+        end
+        expect(page).to have_content("Total: $100.00")
+
+        3.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $250.00")
+          expect(page).to have_content("Discounted Subtotal: $225.00")
+          expect(page).to have_content(@discount_3.description)
+        end
+        expect(page).to have_content("Total: $225.00")
+      end
+
+      xit "I can see a grand total when two merchants have discounts applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        5.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $400.00")
+          expect(page).to have_content("Discounted Subtotal: $360.00")
+          expect(page).to have_content(@discount_3.description)
+        end
+
+        expect(page).to have_content("Total: $360.00")
+
+        10.times do
+          visit item_path(@ogre)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@ogre.id}" do
+          expect(page).to have_content("Subtotal: $200.00")
+          expect(page).to have_content("Discounted Subtotal: $160.00")
+          expect(page).to have_content(@discount_2.description)
+        end
+
+        expect(page).to have_content("Total: $520.00")
       end
     end
   end
