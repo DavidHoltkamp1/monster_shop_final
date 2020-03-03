@@ -66,7 +66,7 @@ RSpec.describe 'Cart Show Page' do
     end
 
     describe 'I can see my cart' do
-      xit "I can visit a cart show page to see items in my cart" do
+      it "I can visit a cart show page to see items in my cart" do
         visit item_path(@ogre)
         click_button 'Add to Cart'
         visit item_path(@hippo)
@@ -99,7 +99,7 @@ RSpec.describe 'Cart Show Page' do
         end
       end
 
-      xit "I can visit an empty cart page" do
+      it "I can visit an empty cart page" do
         visit '/cart'
 
         expect(page).to have_content('Your Cart is Empty!')
@@ -108,7 +108,7 @@ RSpec.describe 'Cart Show Page' do
     end
 
     describe 'I can manipulate my cart' do
-      xit 'I can empty my cart' do
+      it 'I can empty my cart' do
         visit item_path(@ogre)
         click_button 'Add to Cart'
         visit item_path(@hippo)
@@ -126,7 +126,7 @@ RSpec.describe 'Cart Show Page' do
         expect(page).to_not have_button('Empty Cart')
       end
 
-      xit 'I can remove one item from my cart' do
+      it 'I can remove one item from my cart' do
         visit item_path(@ogre)
         click_button 'Add to Cart'
         visit item_path(@hippo)
@@ -146,7 +146,7 @@ RSpec.describe 'Cart Show Page' do
         expect(page).to have_content("#{@ogre.name}")
       end
 
-      xit 'I can add quantity to an item in my cart' do
+      it 'I can add quantity to an item in my cart' do
         visit item_path(@ogre)
         click_button 'Add to Cart'
         visit item_path(@hippo)
@@ -165,33 +165,28 @@ RSpec.describe 'Cart Show Page' do
           expect(page).to have_content('Quantity: 3')
         end
       end
-      #
-      # xit 'I can not add more quantity than the items inventory' do
-      #   visit item_path(@hippo)
-      #   click_button 'Add to Cart'
-      #   visit item_path(@hippo)
-      #   click_button 'Add to Cart'
-      #   visit item_path(@hippo)
-      #   click_button 'Add to Cart'
-      #
-      #   visit '/cart'
-      #
-      #   6.times do
-      #     click_on 'More of This!'
-      #   end
-      #
-      #   within "#item-#{@hippo.id}" do
-      #     expect(page).to_not have_button('More of This!')
-      #   end
-      #
-      #   visit "/items/#{@hippo.id}"
-      #
-      #   click_button 'Add to Cart'
-      #
-      #   expect(page).to have_content("You have all the item's inventory in your cart already!")
-      # end
 
-      xit 'I can reduce the quantity of an item in my cart' do
+      it 'I can not add more quantity than the items inventory' do
+
+        8.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to_not have_button('More of This!')
+        end
+
+        visit "/items/#{@hippo.id}"
+
+        click_button 'Add to Cart'
+
+        expect(page).to have_content("You have all the item's inventory in your cart already!")
+      end
+
+      it 'I can reduce the quantity of an item in my cart' do
         visit item_path(@hippo)
         click_button 'Add to Cart'
         visit item_path(@hippo)
@@ -211,7 +206,7 @@ RSpec.describe 'Cart Show Page' do
         end
       end
 
-      xit 'if I reduce the quantity to zero, the item is removed from my cart' do
+      it 'if I reduce the quantity to zero, the item is removed from my cart' do
         visit item_path(@hippo)
         click_button 'Add to Cart'
 

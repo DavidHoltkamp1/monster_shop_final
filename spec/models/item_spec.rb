@@ -74,8 +74,76 @@ RSpec.describe Item do
       expect(Item.by_popularity(3, "DESC")).to eq([@hippo, @nessie, @ogre])
     end
 
-    # it '.merchant_discounts' do
-    # require "pry"; binding.pry
-    # end
+    it 'get_discounts' do
+      discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @megan.id})
+
+      discount_2 = Discount.create({name: '20% off!',
+        description: '20% off when ordering 10 or more',
+        percentage_off: 20,
+        minimum: 10,
+        maximum: 20,
+        merchant_id: @megan.id})
+
+      discount_3 = Discount.create({name: 'Nice Discount!',
+        description: 'Save 10% on 5 or more items!',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @brian.id
+        })
+
+      expect(@ogre.get_discounts).to eq([discount_1, discount_2])
+      expect(@ogre.get_discounts).not_to eq([discount_3])
+    end
+
+    it 'sorted_discounts' do
+      discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @megan.id})
+
+      discount_2 = Discount.create({name: '20% off!',
+        description: '20% off when ordering 10 or more',
+        percentage_off: 20,
+        minimum: 10,
+        maximum: 20,
+        merchant_id: @megan.id})
+
+        expect(@ogre.sorted_discounts).to eq([discount_2, discount_1])
+        expect(@ogre.sorted_discounts).not_to eq([discount_1, discount_2])
+    end
+
+    it 'discount' do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+      discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @megan.id})
+
+      discount_2 = Discount.create({name: '20% off!',
+        description: '20% off when ordering 10 or more',
+        percentage_off: 20,
+        minimum: 10,
+        maximum: 20,
+        merchant_id: @megan.id})
+
+      item_quantity = 5
+
+      expect(@ogre.discount(item_quantity)).to eq(discount_1)
+
+      item_quantity = 11
+
+      expect(@giant.discount(item_quantity)).to eq(discount_2)
+    end
   end
 end
