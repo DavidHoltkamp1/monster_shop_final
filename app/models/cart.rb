@@ -42,5 +42,12 @@ class Cart
 
   def limit_reached?(item_id)
     count_of(item_id) == Item.find(item_id).inventory
-  end  
+  end
+
+  def discounted_subtotal(item_id)
+    item = Item.find(item_id)
+    discount = item.discount(@contents[item_id.to_s])
+    total_discount = subtotal_of(item_id) * (discount.percentage_off.to_f / 100)
+    subtotal_of(item_id) - total_discount
+  end
 end

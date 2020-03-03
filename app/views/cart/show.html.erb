@@ -13,7 +13,7 @@
       <% if item.discount(cart.count_of(item.id)) %>
         <p>Bulk Discount: <%= item.discount(cart.count_of(item.id)).description %></p>
         <p>Subtotal: <%= number_to_currency(cart.subtotal_of(item.id)) %></p>
-        <p>Discounted Total: </p>
+        <p>Discounted Subtotal: <%= number_to_currency(cart.discounted_subtotal(item.id)) %> </p>
       <% else %>
         <p>Subtotal: <%= number_to_currency(cart.subtotal_of(item.id)) %></p>
       <% end %>

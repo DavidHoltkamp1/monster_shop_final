@@ -49,12 +49,4 @@ class Item < ApplicationRecord
       item_quantity >= discount.minimum
     end
   end
-
-    # discounts = merchant.discounts
-    # require "pry"; binding.pry
-    # discount = Discount.where("minimum <= #{item_quantity}").order('percentage_off DESC')
-    #
-    # merchant.discounts.any do |discount|
-    #   item_quantity >= discount.minimum
-    # end
 end
