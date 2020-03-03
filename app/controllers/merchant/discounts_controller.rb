@@ -1,7 +1,7 @@
 class Merchant::DiscountsController < Merchant::BaseController
 
   def index
-    @discounts = current_user.merchant.discounts
+    @discounts = Merchant.find(current_user.merchant.id).discounts
   end
 
   def new

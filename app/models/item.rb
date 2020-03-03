@@ -29,4 +29,32 @@ class Item < ApplicationRecord
   def average_rating
     reviews.average(:rating)
   end
-end
+
+  def get_discounts
+    merchant_discounts = merchant.discounts.each do |discount|
+      Discount.find(discount.id)
+    end
+    merchant_discounts
+  end
+
+  def sorted_discounts
+     sorted_discounts = get_discounts.sort_by do |discount|
+      discount.percentage_off
+    end
+    sorted_discounts.reverse
+  end
+
+  def discount(item_quantity)
+    sorted_discounts.find do |discount|
+      item_quantity >= discount.minimum
+    end
+  end
+
+    # discounts = merchant.discounts
+    # require "pry"; binding.pry
+    # discount = Discount.where("minimum <= #{item_quantity}").order('percentage_off DESC')
+    #
+    # merchant.discounts.any do |discount|
+    #   item_quantity >= discount.minimum
+    # end
+  end
