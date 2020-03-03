@@ -6,9 +6,63 @@ RSpec.describe 'Cart Show Page' do
     before :each do
       @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
-      @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 5 )
-      @giant = @megan.items.create!(name: 'Giant', description: "I'm a Giant!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 3 )
-      @hippo = @brian.items.create!(name: 'Hippo', description: "I'm a Hippo!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 3 )
+      @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 25 )
+      @giant = @megan.items.create!(name: 'Giant', description: "I'm a Giant!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 25 )
+      @hippo = @brian.items.create!(name: 'Hippo', description: "I'm a Hippo!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 8 )
+
+      @merchant_user = @megan.users.create!({
+              name: "Merchant User",
+              address: "123 Main St.",
+              city: "Broomfield",
+              state: "CO",
+              zip: "80020",
+              email: "merchant@example.com",
+              password: "password",
+              role: 1,
+              merchant: @megan
+              })
+
+      @default_user = User.create({
+              name: "Default User",
+              address: "123 Main St.",
+              city: "Broomfield",
+              state: "CO",
+              zip: "80020",
+              email: "default@example.com",
+              password: "password",
+              role: 0
+              })
+
+      @discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @megan.id})
+
+      @discount_2 = Discount.create({name: '20% off!',
+        description: '20% off when ordering 10 or more',
+        percentage_off: 20,
+        minimum: 10,
+        maximum: 20,
+        merchant_id: @megan.id})
+
+      @discount_3 = Discount.create({name: 'Nice Discount!',
+        description: 'Save 10% on 5 or more items!',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @brian.id
+        })
+
+      @discount_4 = Discount.create({name: 'Better Discount!',
+        description: 'Save 20% on 10 or more items!',
+        percentage_off: 20,
+        minimum: 10,
+        maximum: 20,
+        merchant_id: @brian.id
+        })
+
     end
 
     describe 'I can see my cart' do
@@ -113,12 +167,11 @@ RSpec.describe 'Cart Show Page' do
       end
 
       it 'I can not add more quantity than the items inventory' do
-        visit item_path(@hippo)
-        click_button 'Add to Cart'
-        visit item_path(@hippo)
-        click_button 'Add to Cart'
-        visit item_path(@hippo)
-        click_button 'Add to Cart'
+
+        8.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
 
         visit '/cart'
 
@@ -166,6 +219,170 @@ RSpec.describe 'Cart Show Page' do
         expect(current_path).to eq('/cart')
         expect(page).to_not have_content("#{@hippo.name}")
         expect(page).to have_content("Cart: 0")
+      end
+
+      it "I can see a bulk discount applied when proper inventory is added" do
+
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        2.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        5.times do
+          visit item_path(@ogre)
+          click_button 'Add to Cart'
+        end
+
+        10.times do
+          visit item_path(@giant)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@ogre.id}" do
+          expect(page).to have_content(@discount_1.description)
+          expect(page).to_not have_content(@discount_2.description)
+        end
+
+        within "#item-#{@giant.id}" do
+          expect(page).to have_content(@discount_2.description)
+          expect(page).to_not have_content(@discount_1.description)
+        end
+
+        expect(page).to_not have_content(@discount_3.description)
+        expect(page).to_not have_content(@discount_4.description)
+      end
+
+      it "I can see my discounted total after a discount is applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        2.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        expect(page).not_to have_content("Discounted Subtotal")
+
+        3.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $250.00")
+          expect(page).to have_content("Discounted Subtotal: $225.00")
+        end
+
+      end
+
+      it "I can see separate discounted totals when multiple discounts from different merchants are applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        2.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        expect(page).not_to have_content("Discounted Subtotal")
+
+        6.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $400.00")
+          expect(page).to have_content("Discounted Subtotal: $360.00")
+          expect(page).to have_content(@discount_3.description)
+        end
+
+
+        10.times do
+          visit item_path(@ogre)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@ogre.id}" do
+          expect(page).to have_content("Subtotal: $200.00")
+          expect(page).to have_content("Discounted Subtotal: $160.00")
+          expect(page).to have_content(@discount_2.description)
+        end
+      end
+
+      it "I can see the grand total changed when discounts are applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        2.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).not_to have_content("Discounted Subtotal")
+          expect(page).to have_content("Subtotal: $100.00")
+        end
+        expect(page).to have_content("Total: $100.00")
+
+        3.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $250.00")
+          expect(page).to have_content("Discounted Subtotal: $225.00")
+          expect(page).to have_content(@discount_3.description)
+        end
+        expect(page).to have_content("Total: $225.00")
+      end
+
+      xit "I can see a grand total when two merchants have discounts applied" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
+
+        5.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          expect(page).to have_content("Subtotal: $400.00")
+          expect(page).to have_content("Discounted Subtotal: $360.00")
+          expect(page).to have_content(@discount_3.description)
+        end
+
+        expect(page).to have_content("Total: $360.00")
+
+        10.times do
+          visit item_path(@ogre)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@ogre.id}" do
+          expect(page).to have_content("Subtotal: $200.00")
+          expect(page).to have_content("Discounted Subtotal: $160.00")
+          expect(page).to have_content(@discount_2.description)
+        end
+
+        expect(page).to have_content("Total: $520.00")
       end
     end
   end
