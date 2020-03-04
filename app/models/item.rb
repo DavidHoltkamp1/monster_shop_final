@@ -49,4 +49,9 @@ class Item < ApplicationRecord
       item_quantity >= discount.minimum
     end
   end
+
+  def discounted_price(percentage_off)
+    multiplier = (100 - percentage_off.to_f) / 100
+    price * multiplier
+  end
 end

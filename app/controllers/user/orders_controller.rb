@@ -13,10 +13,16 @@ class User::OrdersController < ApplicationController
     order = current_user.orders.new
     order.save
       cart.items.each do |item|
+        if item.discount(cart.count_of(item.id))
+          discount = item.discount(cart.count_of(item.id))
+          adjusted_price = item.discounted_price(discount.percentage_off)
+        else
+          adjusted_price = item.price
+        end
         order.order_items.create({
           item: item,
           quantity: cart.count_of(item.id),
-          price: item.price
+          price: adjusted_price
           })
       end
     session.delete(:cart)

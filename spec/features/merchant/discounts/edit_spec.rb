@@ -84,6 +84,23 @@ RSpec.describe 'Merchant Dashboard' do
       expect(page).to have_content(minimum)
     end
 
-    
+    it 'I cannot update the discount if all fields are not filled in' do
+      name = "25% off"
+      description = "25% off when ordering 1000 items"
+      percentage_off = 25
+      minimum = 1000
+
+      visit "/merchant/discounts/edit/#{@discount_1.id}"
+
+      fill_in 'Name', with: name
+      fill_in 'Description', with: description
+      fill_in :percentage_off, with: ''
+      fill_in 'Minimum', with: minimum
+      click_button 'Update Discount'
+
+      expect(current_path).to eq("/merchant/discounts/edit/#{@discount_1.id}")
+      expect(page).to have_content("Percentage off can't be blank and Percentage off is not a number")
+
+    end
   end
 end
