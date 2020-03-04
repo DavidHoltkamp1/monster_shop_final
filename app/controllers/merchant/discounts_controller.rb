@@ -27,8 +27,8 @@ class Merchant::DiscountsController < Merchant::BaseController
     if @discount.update(discount_params)
       redirect_to "/merchant/discounts"
     else
-      flash[:error] = discount.errors.full_messages.to_sentence
-      render :edit
+      flash[:error] = @discount.errors.full_messages.to_sentence
+      redirect_to "/merchant/discounts/edit/#{@discount.id}"
     end
   end
 
