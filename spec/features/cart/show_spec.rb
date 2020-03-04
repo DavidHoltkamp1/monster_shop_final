@@ -332,7 +332,7 @@ RSpec.describe 'Cart Show Page' do
         visit '/cart'
 
         within "#item-#{@hippo.id}" do
-          expect(page).not_to have_content("Discounted Subtotal")
+          expect(page).not_to have_content("Discounted Subtotal:")
           expect(page).to have_content("Subtotal: $100.00")
         end
         expect(page).to have_content("Total: $100.00")
@@ -348,10 +348,10 @@ RSpec.describe 'Cart Show Page' do
           expect(page).to have_content("Discounted Subtotal: $225.00")
           expect(page).to have_content(@discount_3.description)
         end
-        expect(page).to have_content("Total: $225.00")
+        expect(page).to have_content("Grand Total with Discounts: $225.00")
       end
 
-      xit "I can see a grand total when two merchants have discounts applied" do
+      it "I can see a grand total when two merchants have discounts applied" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@default_user)
 
         5.times do
@@ -362,12 +362,13 @@ RSpec.describe 'Cart Show Page' do
         visit '/cart'
 
         within "#item-#{@hippo.id}" do
-          expect(page).to have_content("Subtotal: $400.00")
-          expect(page).to have_content("Discounted Subtotal: $360.00")
+          expect(page).to have_content("Subtotal: $250.00")
+          expect(page).to have_content("Discounted Subtotal: $225.00")
           expect(page).to have_content(@discount_3.description)
         end
 
-        expect(page).to have_content("Total: $360.00")
+        expect(page).to have_content("Subtotal: $250.00")
+        expect(page).to have_content("Grand Total with Discounts: $225.00")
 
         10.times do
           visit item_path(@ogre)
@@ -382,7 +383,8 @@ RSpec.describe 'Cart Show Page' do
           expect(page).to have_content(@discount_2.description)
         end
 
-        expect(page).to have_content("Total: $520.00")
+        expect(page).to have_content("Subtotal: $450.00")
+        expect(page).to have_content("Grand Total with Discounts: $385.00")
       end
     end
   end
