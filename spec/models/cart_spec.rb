@@ -63,5 +63,62 @@ RSpec.describe Cart do
 
       expect(@cart.count_of(@giant.id)).to eq(1)
     end
+
+    it 'discounted_subtotal' do
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+
+      @discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @megan.id})
+
+      expect(@cart.discounted_subtotal(@giant.id)).to eq(315)
+    end
+
+    it '.discount_applied' do
+
+      @discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @megan.id})
+
+      expect(@cart.discount_applied?).to eq(false)
+
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+
+      expect(@cart.discount_applied?).to eq(true)
+    end
+
+    it 'discounted_grand_total' do
+
+      @discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        maximum: 9,
+        merchant_id: @megan.id})
+
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+
+      @cart.add_item(@ogre.id.to_s)
+      @cart.add_item(@ogre.id.to_s)
+
+      expect(@cart.discounted_grand_total).to eq(330)
+    end
   end
 end
