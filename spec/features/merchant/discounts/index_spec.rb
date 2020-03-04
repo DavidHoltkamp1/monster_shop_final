@@ -43,21 +43,18 @@ RSpec.describe 'Merchant Dashboard' do
               description: '10% off when ordering 10 or more',
               percentage_off: 10,
               minimum: 10,
-              maximum: 19,
               merchant_id: "#{@megans_mythicals.id}"})
 
       @discount_2 = Discount.create({name: '20% off!',
               description: '20% off when ordering 20 or more',
               percentage_off: 20,
               minimum: 20,
-              maximum: 99,
               merchant_id: "#{@megans_mythicals.id}"})
 
       @discount = Discount.create({name: '50% off!',
               description: '50% off when ordering 50 or more',
               percentage_off: 50,
               minimum: 50,
-              maximum: 100,
               merchant_id: "#{@brians_pets.id}"})
 
 
@@ -67,18 +64,16 @@ RSpec.describe 'Merchant Dashboard' do
 
     it "I can visit discount index page and see all discounts" do
       visit '/merchant/discounts'
-      
+
       expect(page).to have_content(@discount_1.name)
       expect(page).to have_content(@discount_1.description)
       expect(page).to have_content(@discount_1.percentage_off)
       expect(page).to have_content(@discount_1.minimum)
-      expect(page).to have_content(@discount_1.maximum)
 
       expect(page).to have_content(@discount_2.name)
       expect(page).to have_content(@discount_2.description)
       expect(page).to have_content(@discount_2.percentage_off)
       expect(page).to have_content(@discount_2.minimum)
-      expect(page).to have_content(@discount_2.maximum)
 
       expect(page).not_to have_content(@discount.name)
     end

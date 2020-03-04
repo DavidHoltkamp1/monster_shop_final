@@ -42,14 +42,12 @@ RSpec.describe 'Merchant Dashboard' do
               description: '10% off when ordering 10 or more',
               percentage_off: 10,
               minimum: 10,
-              maximum: 19,
               merchant_id: "#{@megans_mythicals.id}"})
 
       @discount_2 = Discount.create({name: '20% off!',
               description: '20% off when ordering 20 or more',
               percentage_off: 20,
               minimum: 20,
-              maximum: 99,
               merchant_id: "#{@megans_mythicals.id}"})
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant_user)
@@ -69,7 +67,6 @@ RSpec.describe 'Merchant Dashboard' do
       description = "25% off when ordering 1000 items"
       percentage_off = 25
       minimum = 1000
-      maximum = 1500
 
       visit 'merchant/discounts/new'
 
@@ -77,7 +74,6 @@ RSpec.describe 'Merchant Dashboard' do
       fill_in 'Description', with: description
       fill_in :percentage_off, with: percentage_off
       fill_in 'Minimum', with: minimum
-      fill_in 'Maximum', with: maximum
       click_button 'Create Discount'
 
       expect(current_path).to eq('/merchant/discounts')
@@ -85,7 +81,6 @@ RSpec.describe 'Merchant Dashboard' do
       expect(page).to have_content(description)
       expect(page).to have_content(percentage_off)
       expect(page).to have_content(minimum)
-      expect(page).to have_content(maximum)
     end
 
     it "I cannot create a discount without all fields" do
@@ -93,7 +88,6 @@ RSpec.describe 'Merchant Dashboard' do
       description = "25% off when ordering 1000 items"
       percentage_off = 25
       minimum = 1000
-      maximum = 1500
 
       visit 'merchant/discounts/new'
 
@@ -101,7 +95,6 @@ RSpec.describe 'Merchant Dashboard' do
       fill_in 'Description', with: description
       fill_in :percentage_off, with: ""
       fill_in 'Minimum', with: minimum
-      fill_in 'Maximum', with: maximum
       click_button 'Create Discount'
 
       expect(current_path).to eq('/merchant/discounts/new')

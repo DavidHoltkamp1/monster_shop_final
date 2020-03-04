@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(version: 20200229214237) do
     t.string "description"
     t.integer "percentage_off"
     t.integer "minimum"
-    t.integer "maximum"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "merchant_id"
