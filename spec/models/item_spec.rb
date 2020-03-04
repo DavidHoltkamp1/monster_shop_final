@@ -138,5 +138,15 @@ RSpec.describe Item do
 
       expect(@giant.discount(item_quantity)).to eq(discount_2)
     end
+
+    it 'discounted_price' do
+      discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        merchant_id: @megan.id})
+
+      expect(@giant.discounted_price(discount_1.percentage_off)).to eq(18)
+    end
   end
 end

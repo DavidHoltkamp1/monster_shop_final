@@ -12,9 +12,15 @@ RSpec.describe 'User Order Show Page' do
       @user = User.create!(name: 'Megan', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218, email: 'megan_1@example.com', password: 'securepassword')
       @order_1 = @user.orders.create!
       @order_2 = @user.orders.create!
-      @order_1.order_items.create!(item: @ogre, price: @ogre.price, quantity: 2)
+      @order_1.order_items.create!(item: @ogre, price: @ogre.price, quantity: 5)
       @order_2.order_items.create!(item: @giant, price: @hippo.price, quantity: 2)
       @order_2.order_items.create!(item: @ogre, price: @hippo.price, quantity: 2)
+      @discount_1 = Discount.create({name: 'Little Discount',
+        description: 'Save when ordering more',
+        percentage_off: 10,
+        minimum: 5,
+        merchant_id: @megan.id})
+
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
     end
 
