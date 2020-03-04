@@ -75,7 +75,6 @@ RSpec.describe Cart do
         description: 'Save when ordering more',
         percentage_off: 10,
         minimum: 5,
-        maximum: 9,
         merchant_id: @megan.id})
 
       expect(@cart.discounted_subtotal(@giant.id)).to eq(315)
@@ -87,7 +86,6 @@ RSpec.describe Cart do
         description: 'Save when ordering more',
         percentage_off: 10,
         minimum: 5,
-        maximum: 9,
         merchant_id: @megan.id})
 
       expect(@cart.discount_applied?).to eq(false)
@@ -107,7 +105,6 @@ RSpec.describe Cart do
         description: 'Save when ordering more',
         percentage_off: 10,
         minimum: 5,
-        maximum: 9,
         merchant_id: @megan.id})
 
       @cart.add_item(@giant.id.to_s)

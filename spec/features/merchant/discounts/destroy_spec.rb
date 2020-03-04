@@ -24,14 +24,12 @@ RSpec.describe 'Merchant Dashboard' do
         description: 'Save when ordering more',
         percentage_off: 10,
         minimum: 10,
-        maximum: 19,
         merchant_id: @megans_mythicals.id})
 
       @discount_2 = Discount.create({name: '20% off!',
         description: '20% off when ordering 20 or more',
         percentage_off: 20,
         minimum: 20,
-        maximum: 99,
         merchant_id: @megans_mythicals.id})
 
       end

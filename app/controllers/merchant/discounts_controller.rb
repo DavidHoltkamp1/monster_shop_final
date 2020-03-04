@@ -43,5 +43,5 @@ end
   private
 
     def discount_params
-      params.permit(:name, :description, :percentage_off, :minimum, :maximum)
+      params.permit(:name, :description, :percentage_off, :minimum)
     end

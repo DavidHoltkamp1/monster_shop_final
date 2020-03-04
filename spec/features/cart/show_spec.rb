@@ -37,21 +37,18 @@ RSpec.describe 'Cart Show Page' do
         description: 'Save when ordering more',
         percentage_off: 10,
         minimum: 5,
-        maximum: 9,
         merchant_id: @megan.id})
 
       @discount_2 = Discount.create({name: '20% off!',
         description: '20% off when ordering 10 or more',
         percentage_off: 20,
         minimum: 10,
-        maximum: 20,
         merchant_id: @megan.id})
 
       @discount_3 = Discount.create({name: 'Nice Discount!',
         description: 'Save 10% on 5 or more items!',
         percentage_off: 10,
         minimum: 5,
-        maximum: 9,
         merchant_id: @brian.id
         })
 
@@ -59,7 +56,6 @@ RSpec.describe 'Cart Show Page' do
         description: 'Save 20% on 10 or more items!',
         percentage_off: 20,
         minimum: 10,
-        maximum: 20,
         merchant_id: @brian.id
         })
 

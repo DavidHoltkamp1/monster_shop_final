@@ -7,7 +7,6 @@
     <p>Description: <%= discount.description %></p>
     <p>Percentage Off: <%= number_to_percentage(discount.percentage_off, precision: 0) %></p>
     <p>Minimum Amount of Items for Discount: <%= discount.minimum %></p>
-    <p>Maximum Amount of Items for Discount: <%= discount.maximum %></p>
     <%= link_to 'Update Discount', "/merchant/discounts/edit/#{discount.id}" %>
     <%= link_to 'Delete Discount', "/merchant/discounts/#{discount.id}", method: :delete %>
   </section>
