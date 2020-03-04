@@ -50,4 +50,22 @@ class Cart
     total_discount = subtotal_of(item_id) * (discount.percentage_off.to_f / 100)
     subtotal_of(item_id) - total_discount
   end
+
+  def discount_applied?
+    @contents.any? do |item_id, quantity|
+      item = Item.find(item_id)
+      item.discount(quantity)
+    end
+  end
+
+  def discounted_grand_total
+    @contents.sum do |item_id, quantity|
+      item = Item.find(item_id)
+      if item.discount(quantity)
+        discounted_subtotal(item_id)
+      else
+        subtotal_of(item_id)
+      end
+    end
+  end
 end
